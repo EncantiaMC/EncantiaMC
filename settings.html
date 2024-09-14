@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encantia | Home</title>
+    <title>Encantia | Settings</title>
     <link rel="icon" href="img/logo.png" type="image/png">
     <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
+    <script src="src/settings/settings.js" defer></script> <!-- Ruta actualizada -->
 </head>
 <body>
     <div class="navbar">
@@ -27,6 +27,20 @@
             </a>
         </div>
     </div>
-    <div id="greeting" class="greeting"></div>
+    
+    <div class="settings-content">
+        <h1>Settings</h1>
+        <div class="theme-setting">
+            <h2>Select Theme</h2>
+            <div class="theme-options">
+                <label class="theme-option">
+                    <input type="radio" name="theme" value="light"> Light Mode
+                </label>
+                <label class="theme-option">
+                    <input type="radio" name="theme" value="dark"> Dark Mode
+                </label>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
