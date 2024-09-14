@@ -4,32 +4,125 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Encantia | Server Info</title>
-    <link rel="icon" href="img/logo.png" type="image/png">
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 0;
+            margin: 0;
+            background-color: #ffffff;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+            padding: 10px 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .navbar a {
+            color: #333;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .navbar .logo img {
+            height: 40px;
+        }
+        .navbar #settings-link img {
+            height: 30px;
+        }
+
+        /* Page Content Styling */
+        h1 {
+            color: #333;
+            margin: 20px 0;
+            text-align: center;
+        }
+        #server-status {
+            background: #fff;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .player-list {
+            margin-top: 10px;
+        }
+        .player-list p {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
 </head>
 <body>
-    <div class="navbar">
-        <div class="links">
-            <a href="index.html">Home</a>
-            <a href="https://encantia-webstore.tebex.io/">Shop</a>
-            <a href="https://form.jotform.com/242551838413356">Support</a>
-            <a href="infosrv.html">Server Info</a>
-        </div>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="index.html">Home</a>
+        <a href="shop.html">Shop</a>
+        <a href="support.html">Support</a>
+        <a href="infosrv.html">Server Info</a>
         <div class="logo">
-            <a href="index.html">
-                <img src="img/logo.png" alt="Logo">
-            </a>
+            <img src="img/logo.png" alt="Logo">
         </div>
-        <div class="settings">
-            <a href="settings.html">
-                <img src="img/settings.png" alt="Settings">
-            </a>
-        </div>
+        <a id="settings-link" href="settings.html">
+            <img src="img/settings.png" alt="Settings">
+        </a>
+    </nav>
+
+    <h1>Estado del Servidor de Minecraft</h1>
+    <div id="server-status">
+        Cargando estado del servidor...
     </div>
-    <div class="content">
-        <h1>Server Information</h1>
-        <!-- Server info content here -->
-    </div>
+
+    <script>
+        async function fetchServerStatus() {
+            const url = 'https://api.mcstatus.io/v2/status/java/encantia.lat';
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                const statusElement = document.getElementById('server-status');
+
+                // Verifica el estado del servidor
+                if (data.online) {
+                    statusElement.innerHTML = `
+                        <p><strong>Estado:</strong> En línea</p>
+                        <p><strong>Jugadores en línea:</strong> ${data.players.online} / ${data.players.max}</p>
+                        <p><strong>Versión:</strong> ${data.version.name_clean}</p>
+                        <p><strong>Descripción:</strong> ${data.motd.clean}</p>
+                        <p><strong>Lista blanca:</strong> Activo</p>
+                        <div class="player-list">
+                            <strong>Jugadores:</strong>
+                            ${data.players.list.length > 0 ? 
+                                data.players.list.map(player => `<p>${player.name_clean}</p>`).join('') :
+                                '<p>No hay jugadores en línea.</p>'}
+                        </div>
+                    `;
+                } else {
+                    statusElement.innerHTML = `
+                        <p><strong>Estado:</strong> Fuera de línea</p>
+                        <p>El servidor está apagado o en mantenimiento.</p>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('server-status').innerHTML = `
+                    <p><strong>Estado:</strong> Error</p>
+                    <p>Error al conectar con la API o el servidor está inactivo.</p>
+                `;
+            }
+        }
+
+        // Llama a la función al cargar la página y luego actualiza cada 10 segundos
+        fetchServerStatus();
+        setInterval(fetchServerStatus, 10000); // 10000 ms = 10 segundos
+    </script>
 </body>
 </html>
