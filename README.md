@@ -3,3 +3,6 @@
 - TikTok: https://tiktok.com/@encantiamc
 - X: https://x.com/encantiamc
 - X en español: https://x.com/encantiaenesp
+- Colaboradores:
+- 1. Discord: tique_first
+- 2. Discord: imalexgg13_
